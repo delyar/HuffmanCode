@@ -45,8 +45,10 @@ class HuffmanCode:
         while len(heap) >1:
             min1 = heap[0]
             heappop(heap)
+            
             min2 = heap[0]
             heappop(heap)
+            
             children = [min1,min2]
             count = min1.count + min2.count
             u = Node(count,children)
@@ -55,13 +57,7 @@ class HuffmanCode:
         self.T = heap[0]
         heappop(heap)
         
-        print("The heap elements : ")
-        for i in heap:
-            print(i.count, end = ' ')
-            
-        print('T:',self.T)
-        
-        
+        self.C = DFS(self.T)
         
     def encode(self, m):
         """
@@ -73,48 +69,51 @@ class HuffmanCode:
         Returns:
             The binary encoding of the plaintext message obtained using self.C.
         """
-        return None
+        binary_encoding = ''
+        for char in m:
+            code = self.C[char]
+            binary_encoding += code
+        return binary_encoding
         
-    def decode(self, c):
-        """
-        Uses self.T to decode a binary message c = encode(m).
-.    
-        Parameters:
-            c: A message encoded in binary using self.encode.
+    def decode(self, text):
+        return ''
         
-        Returns:
-            The original plaintext message m decoded using self.T.
-        """
-        
-        # TODO: Implement this method!
-        return None
-     
      
      
 def DFS(root):
-    print('-------')
-    print('DFS:')
+    
     dfs_array = []
     stack = []
-     
+    
+    c = {}
+    
     root.discovered = True
-    dfs_array.append(root)
     stack.append(root)
     #do something
     
     
+    code = ''
     while len(stack) != 0:
         v = stack.pop()
+        code = code[:-1]
         #process v
         
-        for child in v.children:
+        for (index,child) in enumerate(v.children):
             if child.discovered == False:
                 child.discovered = True
-                dfs_array.append(child)
                 stack.append(child)
                 
-    print('-------')
-    return dfs_array
+                if index == 0:
+                    code +='0'
+                else:
+                    code+= '1'
+                    
+                if child.is_leaf():
+                    c[child.symbol] = code
+            
+                
+    print('\n \n Huffman Dictionary:', c)
+    return c
         
 def get_frequencies(s):
     F = dict()
@@ -129,11 +128,11 @@ def get_frequencies(s):
     return F
     
     
-    
-f = get_frequencies('salam')
+f = get_frequencies('Huffman coding is a data compression algorithm.')
 
 hc = HuffmanCode(f)
 
-dfs = DFS(hc.T)
+print('encode:', hc.encode('a'))
+print('decode:', hc.decode('0001001'))
 
-print(dfs)
+print('-----')
