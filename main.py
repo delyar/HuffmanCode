@@ -53,15 +53,6 @@ class HuffmanCode:
         self.dfs(self.T,'')
         
     def encode(self, m):
-        """
-        Uses self.C to encode a binary message.
-.    
-        Parameters:
-            m: A plaintext message.
-        
-        Returns:
-            The binary encoding of the plaintext message obtained using self.C.
-        """
         binary_encoding = ''
         for char in m:
             code = self.C[char]
@@ -69,7 +60,20 @@ class HuffmanCode:
         return binary_encoding
         
     def decode(self, text):
-        return ''
+        final_string = ''
+        key_list = list(self.C.keys())
+        val_list = list(self.C.values())
+        
+        code = ''
+        for char in text:
+            code += char
+            if code in self.C.values():
+                position = val_list.index(code)
+                key = key_list[position]
+                final_string += key
+                code = ''
+            
+        return final_string
         
      
     def dfs(self, node, code):
@@ -94,12 +98,19 @@ def get_frequencies(s):
     return F
     
     
-f = get_frequencies('abbass')
+f = get_frequencies('string for test')
+hc = HuffmanCode(f)
 
-hc = HuffmanCode()
+print('\nencode:', hc.encode('string for test'))
+print('decode:', hc.decode('100000111100111011010101011101001101000111110000'))
 
+
+# hc = HuffmanCode({'F': 1, 'o': 92, 'u': 21, 'r': 79, ' ': 275, 's': 43, 'c': 31, 'e': 165, 'a': 102, 'n': 76, 'd': 58, 'v': 24, 'y': 10, 'g': 27, 'f': 26, 't': 124, 'h': 80, 'b': 13, 'i': 65, ',': 22, 'w': 26, 'L': 1, 'p': 15, 'l': 41, 'm': 13, 'q': 1, '.': 10, '\n': 4, 'N': 1, 'W': 2, '-': 15, 'I': 3, 'B': 1, 'T': 2, 'k': 3, 'G': 1})
 print('Dict', hc.C)
-print('\nencode:', hc.encode('oregon state rules'))
-print('decode:', hc.decode('0001001'))
+
+
+# print('\nencode:', hc.encode('oregon state rules'))
+# print('decode:', hc.decode('11001010010010101110111011101010011010010001'))
+
 
 print('-----')
