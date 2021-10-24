@@ -29,8 +29,7 @@ class LeafNode(Node):
 
 class HuffmanCode:
     def __init__(self, F):
-        self.C = dict() 
-        self.T = None   
+        self.C = {}
         
         
         # Creating empty heap
@@ -40,24 +39,18 @@ class HuffmanCode:
             leaf_node = LeafNode(char,F[char])
             heappush(heap, leaf_node)
             
-        
-        
         while len(heap) >1:
-            min1 = heap[0]
-            heappop(heap)
-            
-            min2 = heap[0]
-            heappop(heap)
+            min1 = heappop(heap)
+            min2 = heappop(heap)
             
             children = [min1,min2]
             count = min1.count + min2.count
-            u = Node(count,children)
+            
+            u = Node(count, children)
             heappush(heap, u)
             
-        self.T = heap[0]
-        heappop(heap)
-        
-        self.C = DFS(self.T)
+        self.T = heappop(heap)
+        self.dfs(self.T,'')
         
     def encode(self, m):
         """
@@ -79,41 +72,14 @@ class HuffmanCode:
         return ''
         
      
-     
-def DFS(root):
-    
-    dfs_array = []
-    stack = []
-    
-    c = {}
-    
-    root.discovered = True
-    stack.append(root)
-    #do something
-    
-    
-    code = ''
-    while len(stack) != 0:
-        v = stack.pop()
-        code = code[:-1]
-        #process v
-        
-        for (index,child) in enumerate(v.children):
-            if child.discovered == False:
-                child.discovered = True
-                stack.append(child)
-                
-                if index == 0:
-                    code +='0'
-                else:
-                    code+= '1'
+    def dfs(self, node, code):
+        if node.is_leaf():
+            self.C[node.symbol] = code    
+        else:
+            self.dfs(node.children[0], code + '0')
+            self.dfs(node.children[1], code + '1')
                     
-                if child.is_leaf():
-                    c[child.symbol] = code
-            
-                
-    print('\n \n Huffman Dictionary:', c)
-    return c
+        
         
 def get_frequencies(s):
     F = dict()
@@ -128,11 +94,12 @@ def get_frequencies(s):
     return F
     
     
-f = get_frequencies('Huffman coding is a data compression algorithm.')
+f = get_frequencies('abbass')
 
-hc = HuffmanCode(f)
+hc = HuffmanCode()
 
-print('encode:', hc.encode('a'))
+print('Dict', hc.C)
+print('\nencode:', hc.encode('oregon state rules'))
 print('decode:', hc.decode('0001001'))
 
 print('-----')
